@@ -46,7 +46,8 @@ public class News {
         this.categories = categories;
     }
 
-    @OneToMany(mappedBy="cart")
+    @OneToMany
+    @JoinColumn(name = "categories_id")
     private Set<Categories> categories;
 
 }

@@ -2,11 +2,14 @@ package com.bitlord.news.news.entity;
 
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -22,32 +25,9 @@ public class News {
 
     private String news;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNews() {
-        return news;
-    }
-
-    public void setNews(String news) {
-        this.news = news;
-    }
-
-    public Set<Categories> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(Set<Categories> categories) {
-        this.categories = categories;
-    }
-
-    @OneToMany
-    @JoinColumn(name = "categories_id")
-    private Set<Categories> categories;
+    // One-to-Many relationship with Categories
+    @OneToMany(mappedBy = "news", cascade = CascadeType.ALL , fetch = FetchType.LAZY)
+    @JsonManagedReference  // Prevents infinite recursion
+    private List<Categories> categories = new ArrayList<>();
 
 }

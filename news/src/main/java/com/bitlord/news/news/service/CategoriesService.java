@@ -3,7 +3,9 @@ package com.bitlord.news.news.service;
 
 
 import com.bitlord.news.news.entity.Categories;
+import com.bitlord.news.news.entity.News;
 import com.bitlord.news.news.repository.CategoriesRepository;
+import com.bitlord.news.news.repository.NewsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,47 +18,23 @@ public class CategoriesService {
     @Autowired
     private CategoriesRepository categoriesRepository;
 
+    @Autowired
+    private NewsRepository newsRepository;
 
-    // Create new category
-    public Categories createNewcategory(Categories categories ){
+    public Categories addCateToNews ( Long newsId, Categories categories ){
 
-        Categories savedCat = categoriesRepository.save(categories);
-        return savedCat;
+        News news = newsRepository.findById(newsId).orElseThrow(() -> new RuntimeException("Cannot find news with id " + newsId));
 
+        categories.setNews( news );
+
+        return categoriesRepository.save( categories );
     }
 
-    // Get All Cate
-    public List< Categories > getAllCats(){
-        List<Categories> allCats = categoriesRepository.findAll();
-        return allCats;
-    }
+    public List<Categories> getCatesByNewsId(Long newsId) {
 
-    // Get Cate By Id
-    public Optional<Categories> getCatById (Long id ){
-        Optional<Categories> foundedCat = categoriesRepository.findById(id);
-        return foundedCat;
-    }
+        News news = newsRepository.findById(newsId).orElseThrow(() -> new RuntimeException("Cannot find news with id " + newsId));
 
-    // Update Cate
-    public Categories updateCat ( Long id, Categories updatedCat){
-
-        Categories cate = categoriesRepository.findById(id)
-                .orElseThrow( ()-> new RuntimeException( "Category not found with id " +id ) );
-
-        // update fields
-        cate.setCategoryName(updatedCat.getCategoryName() );
-        cate.setNews( updatedCat.getNews() );
-
-        // Save updated employee
-        categoriesRepository.save( cate );
-
-        return cate;
-    }
-
-
-    // Delete Cate
-    public void deleteCate ( Long id ){
-        categoriesRepository.deleteById( id );
+        return news.getCategories();
     }
 
 }

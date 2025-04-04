@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// localhost:8080/api/news
+
 @RestController
 @RequestMapping( "/api/news")
 public class NewsConroller {

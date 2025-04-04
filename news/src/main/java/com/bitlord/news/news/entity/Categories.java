@@ -1,6 +1,7 @@
 package com.bitlord.news.news.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,36 +14,14 @@ public class Categories {
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY)
+    @Column( name = "Categories_Id")
     private Long id;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
-    public News getNews() {
-        return news;
-    }
-
-    public void setNews(News news) {
-        this.news = news;
-    }
 
     private String categoryName;
 
     @ManyToOne
     @JoinColumn(name="news_id")
+    @JsonBackReference  //  Prevents infinite recursion
     private News news;
 
 }

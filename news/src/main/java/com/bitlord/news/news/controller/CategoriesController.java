@@ -15,34 +15,22 @@ public class CategoriesController {
     @Autowired
     private CategoriesService categoriesService;
 
-    @PostMapping
-    public ResponseEntity<Categories> createCate(@RequestBody Categories cate ){
-        Categories newcategory = categoriesService.createNewcategory(cate);
-        return ResponseEntity.ok( newcategory );
+    // Add categories to news
+    @PostMapping( "/news/{newsId}" )
+    public ResponseEntity<String> addCateToNews( @PathVariable Long newsId, @RequestBody Categories categories ){
+
+        Categories newCate = categoriesService.addCateToNews(newsId, categories);
+
+        return ResponseEntity.ok( "Your new Category type successfully added to news: ");
+
     }
 
-    @GetMapping
-    public ResponseEntity<List<Categories>> getAllCate(){
-        List<Categories> allCats = categoriesService.getAllCats();
-        return ResponseEntity.ok( allCats );
-    }
+    // Get categories by news id
+    @GetMapping( "/news/{newsId}" )
+    public ResponseEntity< List<Categories> > getCatesByNewsId( @PathVariable Long newsId ) {
+        List<Categories> catesByNewsId = categoriesService.getCatesByNewsId(newsId);
 
-    @GetMapping( "/{id}" )
-    public ResponseEntity<Categories> getCateById(@PathVariable Long id ){
-        return categoriesService.getCatById(id).map( ResponseEntity::ok )
-                .orElse( ResponseEntity.notFound().build());
-    }
-
-    @PutMapping( "/{id}" )
-    public ResponseEntity<Categories> updateCate( @RequestBody Categories updatedCate, @PathVariable Long id ){
-        Categories categories = categoriesService.updateCat(id, updatedCate);
-        return ResponseEntity.ok( categories );
-    }
-
-    @DeleteMapping( "/{id}" )
-    public ResponseEntity<Void> deleteCate( @PathVariable Long id ){
-        categoriesService.deleteCate( id );
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok( catesByNewsId );
     }
 
 }
